@@ -1,32 +1,40 @@
-const axios = require('axios');
-const mongoose = require('mongoose');
-const Dev = require('../models/Dev');
-
+const axios = require("axios");
+const Dev = require("../models/Dev");
+const parseStringAsArray = require("../utils/parseStringAsArray");
 
 module.exports = {
+  async index(req, res) {
+    const devs = await Dev.find();
+    return res.json(devs);
+  },
+  async store(req, res) {
+    const { github_username, tecs, latitude, longitude } = req.body;
 
-  async store(req,res){
-    const {github_username, techs, latitude, longitude} = req.body;
+    let dev = await Dev.findOne({ github_username });
 
-      let dev = await Dev.findOne({github_username});
-
-      if(!dev){
-      const resApi = await axios.get(`https://api.github.com/users/${github_username}`);
-      const techsArray = techs.split(',').map(tech => tech.trim());
-      const {name = login, avatar_url, bio} = resApi.data;
-      const location ={
-        type:'Point',
-        coordinates: [longitude,latitude],
-      }
+    if (!dev) {
+      const resApi = await axios.get(
+        `https://api.github.com/users/${github_username}`
+      );
+      const tecsArray = parseStringAsArray(tecs);
+      const { name = login, avatar_url, bio } = resApi.data;
+      const location = {
+        type: "Point",
+        coordinates: [longitude, latitude]
+      };
       dev = await Dev.create({
-             name,
-             github_username,
-             avatar_url,
-             bio,
-             techs:techsArray,
-             location,
-           });
+        name,
+        github_username,
+        avatar_url,
+        bio,
+        tecs: tecsArray,
+        location
+      });
     }
-       res.json(dev);
-  }
-}
+    res.json(dev);
+  },
+
+  //lição implementar estes métodos
+  async update() {},
+  async destroy() {}
+};
