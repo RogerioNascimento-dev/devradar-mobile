@@ -13,9 +13,15 @@ module.exports = {
     let dev = await Dev.findOne({ github_username });
 
     if (!dev) {
-      const resApi = await axios.get(
-        `https://api.github.com/users/${github_username}`
-      );
+      try {
+        const resApi = await axios.get(
+          `https://api.github.com/users/${github_username}`
+        );
+      } catch (ex) {
+        return res
+          .status(404)
+          .json({ status: 404, msg: "Usuário Não localizado" });
+      }
       const tecsArray = parseStringAsArray(tecs);
       const { name = login, avatar_url, bio } = resApi.data;
       const location = {
