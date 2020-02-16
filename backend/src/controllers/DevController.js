@@ -17,25 +17,24 @@ module.exports = {
         const resApi = await axios.get(
           `https://api.github.com/users/${github_username}`
         );
+
+        const tecsArray = parseStringAsArray(tecs);
+        const { name = login, avatar_url, bio } = resApi.data;
+        const location = {
+          type: "Point",
+          coordinates: [longitude, latitude]
+        };
+        dev = await Dev.create({
+          name,
+          github_username,
+          avatar_url,
+          bio,
+          tecs: tecsArray,
+          location
+        });
       } catch (ex) {
-        return res
-          .status(404)
-          .json({ status: 404, msg: "Usuário Não localizado" });
+        return res.status(404).json("Usuário não localizado");
       }
-      const tecsArray = parseStringAsArray(tecs);
-      const { name = login, avatar_url, bio } = resApi.data;
-      const location = {
-        type: "Point",
-        coordinates: [longitude, latitude]
-      };
-      dev = await Dev.create({
-        name,
-        github_username,
-        avatar_url,
-        bio,
-        tecs: tecsArray,
-        location
-      });
     }
     res.json(dev);
   },
