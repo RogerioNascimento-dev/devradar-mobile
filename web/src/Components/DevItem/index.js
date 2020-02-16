@@ -1,7 +1,11 @@
 import React from "react";
+import { FaTrash } from "react-icons/fa";
 import "./styles.css";
 
-function DevItem({ dev }) {
+function DevItem({ dev, onRemoveDev }) {
+  function handleDelete(id) {
+    console.log(id);
+  }
   return (
     <li className="dev-item">
       <header>
@@ -9,6 +13,9 @@ function DevItem({ dev }) {
         <div className="user-info">
           <strong>{dev.name}</strong>
           <span>{dev.tecs.join(", ")}</span>
+        </div>
+        <div className="icone">
+          <FaTrash size={15} onClick={() => onRemoveDev(dev._id)} />
         </div>
       </header>
       <p>{dev.bio}</p>

@@ -33,3 +33,11 @@ li.dev-item header img {
   height: 54px;
   border-radius: 50%;
 }
+li .icone {
+  cursor: pointer;
+  color: #ff0000;
+}
+li .icone:hover {
+  color: #990000;
+  transition: color 500ms;
+}
