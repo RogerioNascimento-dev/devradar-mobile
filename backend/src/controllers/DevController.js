@@ -40,6 +40,12 @@ module.exports = {
   },
 
   //lição implementar estes métodos
-  async update() {},
-  async destroy() {}
+  async delete(req, res) {
+    try {
+      await Dev.remove({ _id: req.params.id });
+      res.status(200).json("Excluido com sucesso!");
+    } catch (ex) {
+      res.status(401).json("Usuário Não localizado.");
+    }
+  }
 };
