@@ -12,6 +12,7 @@
     "axios": "^0.19.2",
     "expo": "~36.0.0",
     "expo-location": "~8.0.0",
+    "lottie-react-native": "~2.6.1",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
@@ -23,7 +24,8 @@
     "react-native-web": "~0.11.7",
     "react-native-webview": "7.4.3",
     "react-navigation": "^4.1.1",
-    "react-navigation-stack": "^2.1.1"
+    "react-navigation-stack": "^2.1.1",
+    "react-navigation-tabs": "^2.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

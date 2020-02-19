@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import api from "../services/api";
+import Lottie from "lottie-react-native";
+import loadMap from "../loadMapa.json";
 import {
   Image,
   StyleSheet,
@@ -18,6 +21,8 @@ import {
 function Main({ navigation }) {
   const [currentPosition, setCurrentPosition] = useState(null);
   const [KeyboardActive, setKeyboardActive] = useState(false);
+  const [devs, setDevs] = useState([]);
+  const [tecs, setTecs] = useState("");
   useEffect(() => {
     async function loadInicialPosition() {
       const { granted } = await requestPermissionsAsync();
@@ -46,54 +51,80 @@ function Main({ navigation }) {
     setKeyboardActive(false);
   });
 
+  async function loadDevs() {
+    const { latitude, longitude } = currentPosition;
+    const response = await api.get("/search", {
+      params: {
+        latitude,
+        longitude,
+        tecs
+      }
+    });
+
+    console.log(response.data.devs);
+    setDevs(response.data.devs);
+  }
+
+  function handleRegionChange(region) {
+    setCurrentPosition(region);
+  }
+
   if (!currentPosition) {
-    return null;
+    return (
+      <Lottie autoPlay resizeMode="contain" autoSize loop source={loadMap} />
+    );
   }
   return (
     <>
-      <MapView initialRegion={currentPosition} style={styles.map}>
-        <Marker coordinate={{ latitude: -12.8779558, longitude: -38.3381818 }}>
-          <Image
-            style={styles.avatar}
-            source={{
-              uri: "https://avatars1.githubusercontent.com/u/40906099"
-            }}
-          />
-          <Callout
-            onPress={() => {
-              //navegação
-              navigation.navigate("Profile", {
-                github_username: "Rogerionascimento-dev"
-              });
+      <MapView
+        onRegionChangeComplete={handleRegionChange}
+        initialRegion={currentPosition}
+        style={styles.map}
+      >
+        {devs.map(dev => (
+          <Marker
+            key={dev._id}
+            coordinate={{
+              latitude: dev.location.coordinates[1],
+              longitude: dev.location.coordinates[0]
             }}
           >
-            <View style={styles.callout}>
-              <Text style={styles.calloutTitle}>Rogério Nascimento</Text>
-              <Text style={styles.calloutBio}>
-                Esta aqui é a minha bio, pois serve como descricao
-              </Text>
-              <Text style={styles.calloutTechs}>
-                NodeJs,ReactJs, React Native
-              </Text>
-            </View>
-          </Callout>
-        </Marker>
+            <Image style={styles.avatar} source={{ uri: dev.avatar_url }} />
+            <Callout
+              onPress={() => {
+                //navegação
+                navigation.navigate("Profile", {
+                  github_username: dev.github_username
+                });
+              }}
+            >
+              <View style={styles.callout}>
+                <Text style={styles.calloutTitle}>{dev.name}</Text>
+                <Text style={styles.calloutBio}>{dev.bio}</Text>
+                <Text style={styles.calloutTechs}>{dev.tecs.join(", ")}</Text>
+              </View>
+            </Callout>
+          </Marker>
+        ))}
       </MapView>
 
       <View
         style={[
           styles.searchForm,
-          KeyboardActive ? { top: 250 } : { bottom: 20 }
+          KeyboardActive ? { top: 20 } : { bottom: 20 }
         ]}
       >
         <TextInput
+          onChangeText={text => {
+            setTecs(text);
+          }}
           style={styles.searchInput}
           placeholder="Buscar Por Tecnologia"
           placeholderTextColor="#ccc"
           autoCapitalize="words"
           autoCorrect={false}
         />
-        <TouchableOpacity onPress={() => {}} style={styles.searchButton}>
+        <TouchableOpacity onPress={loadDevs} style={styles.searchButton}>
           <MaterialIcons name="my-location" size={20} color="#FFF" />
         </TouchableOpacity>
       </View>

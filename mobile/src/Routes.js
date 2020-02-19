@@ -3,37 +3,48 @@ import { createStackNavigator } from "react-navigation-stack";
 
 import Main from "./pages/Main";
 import Profile from "./pages/Profile";
-import { Button } from "react-native";
-import React from "react";
+import TesteLottie from "./pages/TesteLottie";
+import { createBottomTabNavigator } from "react-navigation-tabs";
 
-const Routes = createAppContainer(
-  createStackNavigator(
-    {
-      Main: {
-        screen: Main,
-        navigationOptions: {
-          title: "DevRadar"
-        }
-      },
-      Profile: {
-        screen: Profile,
-        navigationOptions: {
-          title: "Perfil no Github"
-        }
+const RoutesStack = createStackNavigator(
+  {
+    Main: {
+      screen: Main,
+      navigationOptions: {
+        title: "DevRadar"
       }
     },
-    {
-      defaultNavigationOptions: {
-        headerStyle: {
-          backgroundColor: "#7159c1"
-        },
-        headerTintColor: "#FFF",
-        headerTitleStyle: {
-          fontWeight: "bold"
-        }
+    Profile: {
+      screen: Profile,
+      navigationOptions: {
+        title: "Perfil no Github"
       }
     }
-  )
+  },
+  {
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: "#7159c1"
+      },
+      headerTintColor: "#FFF",
+      headerTitleStyle: {
+        fontWeight: "bold"
+      }
+    }
+  }
 );
 
-export default Routes;
+const RoutesButton = createBottomTabNavigator({
+  TesteLottie: {
+    screen: TesteLottie,
+    navigationOptions: {
+      title: "Testando Animações"
+    }
+  },
+  App: {
+    name: "APP",
+    screen: createAppContainer(RoutesStack)
+  }
+});
+
+export default createAppContainer(RoutesButton);
