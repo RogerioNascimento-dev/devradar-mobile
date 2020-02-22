@@ -22,4 +22,4 @@ app.use(routes);
 // Route Params: acessibilidade req.params (Identificar recurso na alteração, identificação)...
 // Body: acessibilidade req.body (Dados para criação ou atualização de um registro)
 
-app.listen(3333);
+app.listen(process.env.PORT || 3333);
