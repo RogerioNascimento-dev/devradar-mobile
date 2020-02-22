@@ -29,7 +29,7 @@ function Main({ navigation }) {
   //por padrão carrega todos os devs cadastrados e joga no mapa
   useEffect(() => {
     api
-      .get("/devss")
+      .get("/devs")
       .then(function(res) {
         setDevs(res.data);
       })
@@ -91,7 +91,9 @@ function Main({ navigation }) {
 
   if (!currentPosition) {
     return (
-      <Lottie autoPlay resizeMode="contain" autoSize loop source={loadMap} />
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Lottie autoPlay resizeMode="contain" autoSize loop source={loadMap} />
+      </View>
     );
   }
   return (
