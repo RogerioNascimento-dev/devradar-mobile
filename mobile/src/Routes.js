@@ -3,8 +3,6 @@ import { createStackNavigator } from "react-navigation-stack";
 
 import Main from "./pages/Main";
 import Profile from "./pages/Profile";
-import TesteLottie from "./pages/TesteLottie";
-import { createBottomTabNavigator } from "react-navigation-tabs";
 
 const RoutesStack = createStackNavigator(
   {
@@ -34,17 +32,4 @@ const RoutesStack = createStackNavigator(
   }
 );
 
-const RoutesButton = createBottomTabNavigator({
-  TesteLottie: {
-    screen: TesteLottie,
-    navigationOptions: {
-      title: "Testando Animações"
-    }
-  },
-  App: {
-    name: "APP",
-    screen: createAppContainer(RoutesStack)
-  }
-});
-
-export default createAppContainer(RoutesButton);
+export default createAppContainer(RoutesStack);

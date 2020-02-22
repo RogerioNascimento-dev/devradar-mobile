@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import api from "../services/api";
 import Lottie from "lottie-react-native";
 import loadMap from "../loadMapa.json";
+import DropdownAlert from "react-native-dropdownalert";
+
 import {
   Image,
   StyleSheet,
@@ -23,6 +25,19 @@ function Main({ navigation }) {
   const [KeyboardActive, setKeyboardActive] = useState(false);
   const [devs, setDevs] = useState([]);
   const [tecs, setTecs] = useState("");
+
+  //por padrão carrega todos os devs cadastrados e joga no mapa
+  useEffect(() => {
+    api
+      .get("/devss")
+      .then(function(res) {
+        setDevs(res.data);
+      })
+      .catch(function(err) {
+        alert("Não foi possível carregar Devs");
+        dropdown.alertWithType("error", "Error", error.message);
+      });
+  }, []);
   useEffect(() => {
     async function loadInicialPosition() {
       const { granted } = await requestPermissionsAsync();
@@ -53,16 +68,21 @@ function Main({ navigation }) {
 
   async function loadDevs() {
     const { latitude, longitude } = currentPosition;
-    const response = await api.get("/search", {
-      params: {
-        latitude,
-        longitude,
-        tecs
-      }
-    });
 
-    console.log(response.data.devs);
-    setDevs(response.data.devs);
+    api
+      .get("/search", {
+        params: {
+          latitude,
+          longitude,
+          tecs
+        }
+      })
+      .then(function(response) {
+        setDevs(response.data.devs);
+      })
+      .catch(function(erro) {
+        alert("Algo inesperado aconteceu!");
+      });
   }
 
   function handleRegionChange(region) {
